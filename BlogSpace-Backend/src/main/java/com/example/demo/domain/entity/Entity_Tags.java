@@ -3,7 +3,9 @@ package com.example.demo.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -14,6 +16,17 @@ import java.util.UUID;
 @Setter
 @Table(name="Tags_Table")
 public class Entity_Tags {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    @ManyToMany(mappedBy = "tags")
+    private Set<Entity_Post> posts = new HashSet<>();
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -25,11 +38,4 @@ public class Entity_Tags {
     public int hashCode() {
         return Objects.hash(id, name);
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    @Column(nullable = false, unique = true)
-    private String name;
 }

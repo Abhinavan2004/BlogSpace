@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -38,6 +40,14 @@ public class Entity_Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "column_id", nullable = false)
     private Entity_Category category ;
+
+    @ManyToMany
+    @JoinTable(
+            name="post_tags",
+            joinColumns = @JoinColumn(name="post_id"),
+            inverseJoinColumns = @JoinColumn(name="tag_id")
+    )
+    private Set<Entity_Tags> tags = new HashSet<>();
 
     @Column(nullable = false)
     private Integer readingTime;
