@@ -8,7 +8,12 @@ services:
       - "5432:5432"
     restart: always
     environment:
+      POSTGRES_USER: Abhinav
       POSTGRES_PASSWORD: Abhi@2004
+      POSTGRES_DB: BlogSpace
+      TZ: Asia/Kolkata
+      PGTZ: Asia/Kolkata
+
 
   # Database management interface
   adminer:
