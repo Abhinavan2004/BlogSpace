@@ -19,7 +19,6 @@
 	<name>BlogSpace-Backend</name>
 	<description>Demo project for Spring Boot</description>
 
-	<!-- ✅ FIXED PROPERTIES -->
 	<properties>
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.6.3</org.mapstruct.version>
@@ -38,6 +37,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-mapstruct-binding</artifactId>
+			<version>0.2.0</version>
+			<scope>provided</scope>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -95,7 +102,6 @@
 	<build>
 		<plugins>
 
-			<!-- ✅ Compiler plugin with MapStruct + Lombok -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -113,6 +119,11 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
