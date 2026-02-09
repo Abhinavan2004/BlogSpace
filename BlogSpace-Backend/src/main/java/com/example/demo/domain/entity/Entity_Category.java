@@ -1,24 +1,27 @@
-package com.example.demo.entity;
+package com.example.demo.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Builder
-@RequiredArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
-@Table(name="Tags_Table")
-public class Entity_Tags {
+@Table(name="Category_Table")
+@Builder
+public class Entity_Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Entity_Tags that = (Entity_Tags) o;
+        Entity_Category that = (Entity_Category) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
@@ -27,10 +30,6 @@ public class Entity_Tags {
         return Objects.hash(id, name);
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
-
-    @Column(nullable = false, unique = true)
+    @Column(unique = true , nullable = false)
     private String name;
 }
