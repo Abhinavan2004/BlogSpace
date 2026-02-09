@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -21,11 +23,16 @@ public class Entity_User {
 
     @Column(nullable = false,unique = true)
     private String email;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false)
     private String name ;
-    @Column(nullable = false)
+
+    @OneToMany(mappedBy = "author" ,cascade = CascadeType.ALL ,orphanRemoval = true)
+    private List<Entity_Post> posts = new ArrayList<>();
+
     private LocalDateTime createdAt ;
 
     @Override

@@ -28,6 +28,9 @@ public class Entity_Post {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Enum_Post status ;
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private Entity_User author;
     @Column(nullable = false)
     private Integer readingTime;
     @Column(nullable = false)
