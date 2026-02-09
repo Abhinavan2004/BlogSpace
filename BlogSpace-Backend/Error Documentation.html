@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BlogSpace Backend – Debugging Documentation</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.7;
+            margin: 40px;
+            background-color: #f9fafb;
+            color: #222;
+        }
+        h1, h2, h3 {
+            color: #1f2937;
+        }
+        h1 {
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 8px;
+        }
+        h2 {
+            margin-top: 40px;
+            border-left: 6px solid #2563eb;
+            padding-left: 10px;
+        }
+        h3 {
+            margin-top: 25px;
+        }
+        code, pre {
+            background-color: #111827;
+            color: #f9fafb;
+            padding: 10px;
+            border-radius: 6px;
+            display: block;
+            overflow-x: auto;
+        }
+        .error {
+            color: #b91c1c;
+            font-weight: bold;
+        }
+        .solution {
+            color: #065f46;
+            font-weight: bold;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        .box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-top: 20px;
+        }
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📘 BlogSpace Backend – Docker PostgreSQL & Spring Boot Debugging Documentation</h1>
+
+<div class="box">
+    <h2>📌 Project Context</h2>
+    <ul>
+        <li><strong>Project:</strong> BlogSpace – A Blog Platform (Backend)</li>
+        <li><strong>Backend Framework:</strong> Spring Boot 3.5.10</li>
+        <li><strong>ORM:</strong> Hibernate 6.6.x</li>
+        <li><strong>Database:</strong> PostgreSQL (Dockerized)</li>
+        <li><strong>Java Version:</strong> Java 23</li>
+        <li><strong>Operating System:</strong> Windows</li>
+        <li><strong>Containerization:</strong> Docker & Docker Compose</li>
+    </ul>
+    <p>
+        This document explains all runtime and configuration errors encountered during backend setup
+        and how each was resolved step by step.
+    </p>
+</div>
+
+<h2>1️⃣ PostgreSQL Not Running / Not Reachable</h2>
+
+<p class="error">❌ Error Observed</p>
+<pre>
+Connection refused
+Could not open JDBC Connection
+</pre>
+
+<p><strong>🔍 Root Cause</strong></p>
+<ul>
+    <li>PostgreSQL container was not started</li>
+    <li>Wrong container name used</li>
+    <li>PostgreSQL service not properly exposed</li>
+</ul>
+
+<p class="solution">✅ Solution</p>
+<pre>
+docker compose up -d
+</pre>
+
+<pre>
+docker ps
+</pre>
+
+<p>Correct containers:</p>
+<pre>
+blogspace-backend-db-1
+blogspace-backend-adminer-1
+</pre>
+
+<h2>2️⃣ Wrong Container Name Used in docker exec</h2>
+
+<p class="error">❌ Error Observed</p>
+<pre>
+docker exec -it blogspace-backend psql -U Abhinav -d BlogSpace
+Error: No such container
+</pre>
+
+<p><strong>🔍 Root Cause</strong></p>
+<p>Incorrect container name was used.</p>
+
+<p class="solution">✅ Solution</p>
+<pre>
+docker exec -it blogspace-backend-db-1 psql -U Abhinav -d BlogSpace
+</pre>
+
+<h2>3️⃣ SHOW timezone; Command Not Working</h2>
+
+<p class="error">❌ Error Observed</p>
+<pre>
+SHOW : The term 'SHOW' is not recognized as a cmdlet
+</pre>
+
+<p><strong>🔍 Root Cause</strong></p>
+<p>
+    <code>SHOW timezone;</code> is a PostgreSQL SQL command, not a PowerShell command.
+</p>
+
+<p class="solution">✅ Solution</p>
+<pre>
+SHOW timezone;
+</pre>
+
+<h2>4️⃣ PostgreSQL Timezone Mismatch (Asia/Calcutta Error)</h2>
+
+<p class="error">❌ Error Observed</p>
+<pre>
+FATAL: invalid value for parameter "TimeZone": "Asia/Calcutta"
+</pre>
+
+<p><strong>🔍 Root Cause</strong></p>
+<ul>
+    <li>PostgreSQL does not support <code>Asia/Calcutta</code></li>
+    <li>Correct timezone is <code>Asia/Kolkata</code></li>
+    <li>Hibernate/JDBC passed an invalid timezone</li>
+</ul>
+
+<p class="solution">✅ Solution (Database Side)</p>
+<pre>
+ALTER DATABASE BlogSpace SET timezone TO 'Asia/Kolkata';
+</pre>
+
+<pre>
+SHOW timezone;
+</pre>
+
+<h2>5️⃣ Error Still Appearing After Fix</h2>
+
+<p class="error">❌ Error Observed</p>
+<p>Error persisted even after DB timezone fix.</p>
+
+<p><strong>🔍 Root Cause</strong></p>
+<p>
+    JVM was still using system timezone which internally mapped to <code>Asia/Calcutta</code>.
+</p>
+
+<h2>6️⃣ Final Fix – Force JVM Timezone</h2>
+
+<p class="solution">✅ Solution</p>
+<pre>
+-Duser.timezone=UTC
+</pre>
+
+<pre>
+java -Duser.timezone=UTC -jar BlogSpaceBackend.jar
+</pre>
+
+<p><strong>🟢 Result</strong></p>
+<pre>
+2026-02-09T18:48:50.823Z
+</pre>
+
+<ul>
+    <li>PostgreSQL connected</li>
+    <li>HikariCP started</li>
+    <li>Application booted successfully</li>
+</ul>
+
+<h2>7️⃣ UUID + IDENTITY Column Error</h2>
+
+<p class="error">❌ Error Observed</p>
+<pre>
+ERROR: identity column type must be smallint, integer, or bigint
+</pre>
+
+<p><strong>🔍 Root Cause</strong></p>
+<p>
+    PostgreSQL does not support IDENTITY generation for UUID columns.
+</p>
+
+<h2>8️⃣ Correct UUID Generation Strategy (Hibernate 6)</h2>
+
+<p class="solution">✅ Solution</p>
+<pre>
+@Id
+@GeneratedValue
+@UuidGenerator
+@Column(columnDefinition = "uuid")
+private UUID id;
+</pre>
+
+<p>Removed strategies:</p>
+<ul>
+    <li>GenerationType.IDENTITY ❌</li>
+    <li>GenerationType.SEQUENCE ❌</li>
+</ul>
+
+<h2>9️⃣ Cascade Errors After Table Creation Failure</h2>
+
+<p class="error">❌ Errors Observed</p>
+<pre>
+relation "posts_table" does not exist
+foreign key constraint failed
+</pre>
+
+<p><strong>🔍 Root Cause</strong></p>
+<ul>
+    <li>Table creation failed due to UUID identity issue</li>
+    <li>Hibernate attempted foreign key creation anyway</li>
+</ul>
+
+<p class="solution">✅ Solution</p>
+<p>
+    After fixing UUID strategy, tables and foreign keys were created successfully.
+</p>
+
+<h2>🔟 Final Successful Startup</h2>
+
+<p class="solution">✅ Confirmed Success</p>
+<pre>
+HikariPool-1 - Start completed
+Hibernate: create table posts_table
+Tomcat started on port 8080
+Started BlogSpaceBackendApplication
+</pre>
+
+<h2>✅ Final Configuration Summary</h2>
+
+<h3>✔ Docker</h3>
+<ul>
+    <li>PostgreSQL running via Docker Compose</li>
+    <li>Ports exposed correctly</li>
+    <li>Volumes recreated cleanly</li>
+</ul>
+
+<h3>✔ Database</h3>
+<ul>
+    <li>Timezone: Asia/Kolkata</li>
+    <li>UUID support enabled</li>
+    <li>Schema auto-created</li>
+</ul>
+
+<h3>✔ Spring Boot</h3>
+<ul>
+    <li>JVM timezone forced to UTC</li>
+    <li>Hibernate UUID generator used</li>
+    <li>PostgreSQL dialect auto-detected</li>
+</ul>
+
+<h2>🏁 Conclusion</h2>
+
+<p>
+    This debugging process involved multiple layers including Docker, PostgreSQL internals,
+    JDBC behavior, Hibernate ORM rules, and JVM timezone handling.
+</p>
+
+<p>
+    Each issue was resolved by:
+</p>
+
+<ul>
+    <li>Identifying the exact error</li>
+    <li>Understanding the root cause</li>
+    <li>Applying the correct fix</li>
+    <li>Verifying results through logs</li>
+</ul>
+
+<p>
+    The BlogSpace backend is now stable, production-ready, and correctly configured.
+</p>
+
+<footer>
+    <p>© BlogSpace Backend Debugging Documentation</p>
+</footer>
+
+</body>
+</html>
