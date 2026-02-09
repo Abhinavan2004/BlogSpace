@@ -23,18 +23,28 @@ public class Entity_Post {
 
     @Column(nullable = false)
     private String title ;
+
     @Column(nullable = false, columnDefinition="TEXT")
     private String content ;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Enum_Post status ;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private Entity_User author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "column_id", nullable = false)
+    private Entity_Category category ;
+
     @Column(nullable = false)
     private Integer readingTime;
+
     @Column(nullable = false)
     private LocalDateTime createdAt ;
+
     @Column(nullable = false)
     private LocalDateTime updatedAt ;
 
