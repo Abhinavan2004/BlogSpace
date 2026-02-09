@@ -1,8 +1,7 @@
-package com.example.demo.entity;
+package com.example.demo.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -17,7 +16,7 @@ import java.util.UUID;
 @Table(name="User_Table")
 public class Entity_User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false,unique = true)
