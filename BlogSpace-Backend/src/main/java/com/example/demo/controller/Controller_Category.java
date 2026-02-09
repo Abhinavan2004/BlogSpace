@@ -6,6 +6,7 @@ import com.example.demo.service.Service_Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,5 +27,11 @@ public class Controller_Category {
                 .toList();
         return ResponseEntity.ok(categories);
     }
+
+
+    @PostMapping
+    public ResponseEntity<Dto_C>
 }
+
+
 
