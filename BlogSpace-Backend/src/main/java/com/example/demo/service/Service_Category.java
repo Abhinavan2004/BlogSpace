@@ -15,4 +15,8 @@ public class Service_Category {
     public List<Entity_Category> listCategories() {
         return categoryRepository.findAllWithPosts();
     }
+
+    public Entity_Category createCategory(Entity_Category category) {
+
+    }
 }
