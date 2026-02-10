@@ -1,14 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.dtos.Dto_Category;
+import com.example.demo.domain.dtos.Dto_CreateCategory;
+import com.example.demo.domain.entity.Entity_Category;
 import com.example.demo.domain.mappers.Category_Mapper;
 import com.example.demo.service.Service_Category;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,7 +30,9 @@ public class Controller_Category {
 
 
     @PostMapping
-    public ResponseEntity<Dto_C>
+    public ResponseEntity<Dto_CreateCategory> createCategory(@Valid @RequestBody Dto_CreateCategory dto_CreateCategory) {
+        Entity_Category category = category_mapper.toEntity(dto_CreateCategory);
+    }
 }
 
 
