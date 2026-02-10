@@ -7,6 +7,7 @@ import com.example.demo.domain.mappers.Category_Mapper;
 import com.example.demo.service.Service_Category;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,10 @@ public class Controller_Category {
 
 
     @PostMapping
-    public ResponseEntity<Dto_CreateCategory> createCategory(@Valid @RequestBody Dto_CreateCategory dto_CreateCategory) {
+    public ResponseEntity<Dto_Category> createCategory(@Valid @RequestBody Dto_CreateCategory dto_CreateCategory) {
         Entity_Category category = category_mapper.toEntity(dto_CreateCategory);
+        Entity_Category createdCategory = serviceCategory.createCategory(category);
+        return new ResponseEntity<>(category_mapper.toDto(createdCategory), HttpStatus.CREATED);
     }
 }
 

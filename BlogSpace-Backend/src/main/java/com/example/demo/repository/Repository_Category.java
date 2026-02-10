@@ -18,6 +18,6 @@ public interface Repository_Category extends JpaRepository<Entity_Category, UUID
     """)
     List<Entity_Category> findAllWithPosts();
 
-    boolean category_exists_by_Name(String name);
+    boolean categoryexistsbyName(String name);
 }
 
