@@ -19,7 +19,7 @@ public class Service_Category {
 
     @Transactional
     public Entity_Category createCategory(Entity_Category category) {
-        if(categoryRepository.categoryexistsbyName(category.getName())){
+        if(categoryRepository.existsByName(category.getName())){
             throw new IllegalArgumentException("Category Already Present : " + category.getName());
         }
         return  categoryRepository.save(category);
