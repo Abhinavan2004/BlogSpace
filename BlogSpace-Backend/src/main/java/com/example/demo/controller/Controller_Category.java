@@ -39,7 +39,7 @@ public class Controller_Category {
     }
 
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable UUID id){
         serviceCategory.delete_the_category(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
