@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,6 +29,13 @@ public class Service_Category {
 
 
     public void delete_the_category(UUID id) {
+       Optional<Entity_Category> categoryyy =  categoryRepository.findById(id);
+        if(categoryyy.isPresent()){
+            if(!categoryyy.get().getPosts().isEmpty()){
+                throw new  IllegalStateException("Category contains posts related to it !!!");
+            }
+            categoryRepository.delete(categoryyy.get());
 
+        }
     }
 }
