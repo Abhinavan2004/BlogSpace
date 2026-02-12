@@ -22,8 +22,20 @@ public class Controller_Error {
 
         Dto_Error error = Dto_Error.builder()
                 .status(HttpStatus.CREATED.value())
-                .message("EXception is Founded here").build();
+                .message("An Unexcepted Exception occurred").build();
         
         return new ResponseEntity<>(error , HttpStatus.INTERNAL_SERVER_ERROR);
     }
-}
+
+    @ExceptionHandler(IllegalAccessException.class)
+    public ResponseEntity<Dto_Error> handlesException(IllegalAccessException ex){
+        log.error(ex.getMessage(),ex);
+
+        Dto_Error error = Dto_Error.builder()
+                .status((HttpStatus.BAD_REQUEST.value()))
+                .build();
+
+        return new ResponseEntity<>(error , HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
