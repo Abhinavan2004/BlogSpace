@@ -37,5 +37,17 @@ public class Controller_Error {
 
         return new ResponseEntity<>(error , HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Dto_Error> handlesIllegalStateException(IllegalStateException ex){
+        log.error(ex.getMessage(),ex);
+
+        Dto_Error error = Dto_Error.builder()
+                .status((HttpStatus.CONFLICT.value()))
+                .build();
+
+        return new ResponseEntity<>(error , HttpStatus.CONFLICT);
+    }
     }
 
