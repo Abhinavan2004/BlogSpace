@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,5 +24,10 @@ public class Service_Category {
             throw new IllegalArgumentException("Category Already Present : " + category.getName());
         }
         return  categoryRepository.save(category);
+    }
+
+
+    public void delete_the_category(UUID id) {
+
     }
 }
