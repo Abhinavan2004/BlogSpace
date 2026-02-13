@@ -18,20 +18,19 @@ public class SecurityChain {
     @Bean
     public SecurityFilterChain securityfilterchain(HttpSecurity http) throws Exception {
         http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/api/v1/posts", "/api/v1/posts/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories", "/api/v1/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/tags", "/api/v1/tags/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
 
-.authorizeHttpRequests(auth -> auth
-            .requestMatchers(HttpMethod.GET, "/api/v1/posts/ ** ").permitAll()
-            .requestMatchers(HttpMethod.GET,   "/api/v1/categories/ ** ").permitAll()
-            .requestMatchers(HttpMethod.GET,   "/api/v1/tags/ ** ") .permitAll()
-            .anyRequest () .authenticated()
-)
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session ->
-                    session. sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );
-    return http.build();
-
-}
+        return http.build();
+    }
 
 @Bean
     public PasswordEncoder passwordEncoder() {
