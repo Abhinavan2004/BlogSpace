@@ -28,7 +28,7 @@ public class Entity_User {
     private String password;
 
     @Column(nullable = false)
-    private String name ;
+    private String username ;
 
     @OneToMany(mappedBy = "author" ,cascade = CascadeType.ALL ,orphanRemoval = true)
     private List<Entity_Post> posts = new ArrayList<>();
