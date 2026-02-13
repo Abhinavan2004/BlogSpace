@@ -5,6 +5,7 @@ import com.example.demo.domain.dtos.Dto_Error;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -48,6 +49,19 @@ public class Controller_Error {
                 .build();
 
         return new ResponseEntity<>(error , HttpStatus.CONFLICT);
+    }
+
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Dto_Error> handlesBAdCredentialsException(BadCredentialsException ex){
+        log.error(ex.getMessage(),ex);
+
+        Dto_Error error = Dto_Error.builder()
+                .message("Incorrect Username or Password")
+                .status((HttpStatus.UNAUTHORIZED.value()))
+                .build();
+
+        return new ResponseEntity<>(error , HttpStatus.UNAUTHORIZED);
     }
     }
 
