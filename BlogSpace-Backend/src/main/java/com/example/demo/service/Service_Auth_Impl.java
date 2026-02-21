@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -53,5 +54,20 @@ public class Service_Auth_Impl implements Service_Auth{
     private Key getSigningKey() {
         byte []bytekeys = SecretKey.getBytes();
     return Keys.hmacShaKeyFor(bytekeys);
+    }
+
+    public UserDetails validateToken(String token){
+        String username = extractUsername(token);
+        return userDetailsService.loadUserByUsername(username);
+    }
+
+    private String extractUsername(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
     }
 }
