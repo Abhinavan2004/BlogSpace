@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.dtos.AuthResponse;
+import com.example.demo.domain.dtos.loginRequest;
 import com.example.demo.service.Service_Auth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class Controller_Auth {
     private final Service_Auth service_auth;
 
     @PostMapping
-    public ResponseEntity<AuthResponse> login(@RequestBody UserDetails userDetails){
+    public ResponseEntity<AuthResponse> login(@RequestBody loginRequest userDetails){
         UserDetails user = service_auth.authenticate(
                 userDetails.getUsername(),
                 userDetails.getPassword()

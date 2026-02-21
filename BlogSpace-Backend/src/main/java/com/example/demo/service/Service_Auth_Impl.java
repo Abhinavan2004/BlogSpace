@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -23,18 +24,28 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class Service_Auth_Impl implements Service_Auth{
 
-    private AuthenticationManager authenticationManager;
-    private UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
 
     @Value("${jwt.secret}")
     private String SecretKey ;
 
     @Override
     public UserDetails authenticate(String email, String password) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+        System.out.println("RAW PASSWORD: " + password);
+        System.out.println("DB PASSWORD: " + userDetails.getPassword());
+
+        boolean matches = passwordEncoder.matches(password, userDetails.getPassword());
+        System.out.println("PASSWORD MATCHES: " + matches);
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
         );
-        return  userDetailsService.loadUserByUsername(email);
+
+        return userDetails;
     }
 
     private long jwtExpiryms = 86400000L;
