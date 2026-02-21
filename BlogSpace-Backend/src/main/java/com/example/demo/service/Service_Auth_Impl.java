@@ -40,7 +40,7 @@ public class Service_Auth_Impl implements Service_Auth{
 
     @Override
     public String generateToken(UserDetails userDetails) {
-        Map<String , Object> map = new HashMap<>();
+        Map<String , Object> claims = new HashMap<>();
         return  Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
