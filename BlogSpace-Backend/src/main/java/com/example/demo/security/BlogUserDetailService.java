@@ -14,6 +14,9 @@ public class BlogUserDetailService implements UserDetailsService {
 
     private Repository_User repository_User;
 
+    public BlogUserDetailService(Repository_User repositoryUser) {
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Entity_User user  =  repository_User.findByUsername(email);
