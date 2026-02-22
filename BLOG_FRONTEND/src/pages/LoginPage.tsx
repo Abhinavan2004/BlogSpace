@@ -16,16 +16,15 @@ const LoginPage = () => {
     setError('');
     setIsLoading(true);
 
-    try {
-      const response = await apiService.login({ email, password });
-      login(response);
-      navigate('/');
-    } catch (err: any) {
-      setError(err.message || 'Failed to login. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  try {
+    await login(email, password);  // pass email and password strings directly
+    navigate('/');
+  } catch (err: any) {
+    setError(err.message || 'Failed to login. Please try again.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
