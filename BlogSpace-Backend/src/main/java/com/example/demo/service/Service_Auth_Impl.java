@@ -3,6 +3,7 @@ package com.example.demo.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.nio.charset.StandardCharsets;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,19 +53,19 @@ public class Service_Auth_Impl implements Service_Auth{
 
     @Override
     public String generateToken(UserDetails userDetails) {
-        Map<String , Object> claims = new HashMap<>();
-        return  Jwts.builder()
-                .setClaims(claims)
+        return Jwts.builder()
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiryms))
-                .signWith(getSigningKey() , SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
-    };
+    }
+
 
     private Key getSigningKey() {
-        byte []bytekeys = SecretKey.getBytes();
-    return Keys.hmacShaKeyFor(bytekeys);
+        return Keys.hmacShaKeyFor(
+                SecretKey.getBytes(StandardCharsets.UTF_8)
+        );
     }
 
     public UserDetails validateToken(String token){

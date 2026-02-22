@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1/auth/login")
 public class Controller_Auth {
 
     private final Service_Auth service_auth;
@@ -21,7 +21,7 @@ public class Controller_Auth {
     @PostMapping
     public ResponseEntity<AuthResponse> login(@RequestBody loginRequest userDetails){
         UserDetails user = service_auth.authenticate(
-                userDetails.getUsername(),
+                userDetails.getEmail(),
                 userDetails.getPassword()
         );
         String tokenValue = service_auth.generateToken(user);
