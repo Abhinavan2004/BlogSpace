@@ -7,10 +7,14 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryImplementati
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
 public interface Repository_Tag extends JpaRepository<Entity_Tags, UUID> {
     @Query("Select t from Entity_Tags t Left join fetch t.posts")
     List<Entity_Tags> findAllWithPostCount();
+
+    @Query("")
+    List<Entity_Tags> findByNameIn(Set<String> tagNames);
 }
