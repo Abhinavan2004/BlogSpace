@@ -1,12 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.domain.dtos.Dto_Category;
 import com.example.demo.domain.dtos.Dto_Error;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,6 +27,8 @@ public class Controller_Error {
         return new ResponseEntity<>(error , HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
+
     @ExceptionHandler(IllegalAccessException.class)
     public ResponseEntity<Dto_Error> handlesException(IllegalAccessException ex){
         log.error(ex.getMessage(),ex);
@@ -38,6 +39,7 @@ public class Controller_Error {
 
         return new ResponseEntity<>(error , HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
 
 
     @ExceptionHandler(IllegalStateException.class)
@@ -52,6 +54,7 @@ public class Controller_Error {
     }
 
 
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Dto_Error> handlesBAdCredentialsException(BadCredentialsException ex){
         log.error(ex.getMessage(),ex);
@@ -62,6 +65,20 @@ public class Controller_Error {
                 .build();
 
         return new ResponseEntity<>(error , HttpStatus.UNAUTHORIZED);
+    }
+
+
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Dto_Error> handlesEntityNotFoundException(EntityNotFoundException ex){
+        log.error(ex.getMessage(),ex);
+
+        Dto_Error error = Dto_Error.builder()
+                .message("Category Not Found")
+                .status((HttpStatus.NOT_FOUND.value()))
+                .build();
+
+        return new ResponseEntity<>(error , HttpStatus.NOT_FOUND);
     }
     }
 
