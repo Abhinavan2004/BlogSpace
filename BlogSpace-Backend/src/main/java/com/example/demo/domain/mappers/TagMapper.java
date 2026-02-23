@@ -5,6 +5,7 @@ import com.example.demo.domain.entity.Entity_Post;
 import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.domain.Enum_Post;
+import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -19,7 +20,7 @@ public interface TagMapper {
     Dto_Tags toTagResponse(Entity_Tags tag);
 
     @Named("calculatePostCount")
-    default Integer calculatePostCount(List<Entity_Post> posts) {
+    default Integer calculatePostCount(Set<Entity_Post> posts) {
         if (posts == null) {
             return 0;
         }
