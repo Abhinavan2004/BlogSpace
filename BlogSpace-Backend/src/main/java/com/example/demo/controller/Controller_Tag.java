@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,7 +40,12 @@ public class Controller_Tag {
                 createdTagResponses,
                 HttpStatus.CREATED
         );
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete_Tag(@PathVariable UUID id){
+        tagService.delete_Tags(id);
+        return ResponseEntity.noContent().build();
     }
 
 
