@@ -14,5 +14,5 @@ import java.util.UUID;
 public class Dto_Tags {
     private UUID id;
     private String name ;
-    private long postsCount ;
+    private long postCount ;
 }
