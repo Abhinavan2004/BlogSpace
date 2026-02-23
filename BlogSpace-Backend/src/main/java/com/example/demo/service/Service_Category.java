@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.domain.entity.Entity_Category;
 import com.example.demo.repository.Repository_Category;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,10 @@ public class Service_Category {
                 throw new  IllegalStateException("Category contains posts related to it !!!");
             }
             categoryRepository.delete(categoryyy.get());
-
         }
+    }
+
+    public Entity_Category findCategoryById(UUID id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Category Id Not Found")) ;
     }
 }
