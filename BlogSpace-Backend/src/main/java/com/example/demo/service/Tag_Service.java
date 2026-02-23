@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.parser.Entity;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
@@ -48,5 +45,16 @@ public class Tag_Service {
 
                     return savedTags ;
                 }
+
+
+        public void delete_Tags(UUID id){
+        repository_tag.findById(id).ifPresent(tag ->{
+            if ((!tag.getPosts().isEmpty())) {
+
+                throw new IllegalStateException("Cannot Delete tag with posts");
+            }
+            repository_tag.deleteById(id);
+        });
+        }
     }
 
