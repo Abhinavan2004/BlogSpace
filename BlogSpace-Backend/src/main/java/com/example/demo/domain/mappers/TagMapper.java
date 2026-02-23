@@ -1,6 +1,6 @@
 package com.example.demo.domain.mappers;
 
-import com.example.demo.domain.dtos.Tags_Response;
+import com.example.demo.domain.dtos.Dto_Tag;
 import com.example.demo.domain.entity.Entity_Post;
 import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.domain.Enum_Post;
@@ -14,7 +14,7 @@ import org.mapstruct.ReportingPolicy;
 public interface TagMapper {
 
     @Mapping(target = "postCount", source = "posts", qualifiedByName = "calculatePostCount")
-    Tags_Response toTagResponse(Entity_Tags tag);
+    Dto_Tag toTagResponse(Entity_Tags tag);
 
     @Named("calculatePostCount")
     default Integer calculatePostCount(Set<Entity_Post> posts) {

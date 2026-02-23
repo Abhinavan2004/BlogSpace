@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.dtos.CreateTag_Request;
-import com.example.demo.domain.dtos.Tags_Response;
+import com.example.demo.domain.dtos.Dto_Tag;
 import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.domain.mappers.TagMapper;
 import com.example.demo.service.Tag_Service;
@@ -25,17 +25,17 @@ public class Controller_Tag {
     private final TagMapper tagMapper;
 
     @GetMapping
-    public ResponseEntity<List<Tags_Response>> getAllTags() {
+    public ResponseEntity<List<Dto_Tag>> getAllTags() {
         List<Entity_Tags> tags = tagService.getTags();
-        List<Tags_Response> tagResponses = tags.stream().map(tagMapper::toTagResponse).toList();
+        List<Dto_Tag> tagResponses = tags.stream().map(tagMapper::toTagResponse).toList();
         return ResponseEntity.ok(tagResponses);
     }
 
 
     @PostMapping
-    public ResponseEntity<List<Tags_Response>> createTags(@RequestBody CreateTag_Request createtagrequest) {
+    public ResponseEntity<List<Dto_Tag>> createTags(@RequestBody CreateTag_Request createtagrequest) {
         List<Entity_Tags> savedTags = tagService.createTags(createtagrequest.getNames());
-        List<Tags_Response> createdTagResponses = savedTags.stream().map(tagMapper::toTagResponse).toList();
+        List<Dto_Tag> createdTagResponses = savedTags.stream().map(tagMapper::toTagResponse).toList();
         return new ResponseEntity<>(
                 createdTagResponses,
                 HttpStatus.CREATED
