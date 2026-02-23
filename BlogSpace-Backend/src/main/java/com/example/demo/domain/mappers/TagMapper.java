@@ -1,8 +1,7 @@
 package com.example.demo.domain.mappers;
 
-import com.example.demo.domain.dtos.Dto_Tags;
+import com.example.demo.domain.dtos.Tags_Response;
 import com.example.demo.domain.entity.Entity_Post;
-import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.domain.Enum_Post;
 import java.util.Set;
@@ -11,13 +10,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TagMapper {
 
     @Mapping(target = "postCount", source = "posts", qualifiedByName = "calculatePostCount")
-    Dto_Tags toTagResponse(Entity_Tags tag);
+    Tags_Response toTagResponse(Entity_Tags tag);
 
     @Named("calculatePostCount")
     default Integer calculatePostCount(Set<Entity_Post> posts) {
