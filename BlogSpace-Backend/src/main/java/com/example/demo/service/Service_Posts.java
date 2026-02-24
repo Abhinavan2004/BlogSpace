@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.Enum_Post;
+import com.example.demo.domain.entity.Entity_Category;
 import com.example.demo.domain.entity.Entity_Post;
+import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.repository.Repository_Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,15 @@ public class Service_Posts {
 
     public List<Entity_Post> getAllPosts(UUID tagId , UUID categoryId){
         if(categoryId != null && tagId != null ){
+            Entity_Category category = service_category.findCategoryById(categoryId);
+            Entity_Tags tag = tagservice.getTagById(tagId);
+            return repository_post.findAllByStatusAndCategoryAndTags(
+                    Enum_Post.PUBLISHED,
+                    category,
+                    tag
+            );
+        }
+        if(categoryId != null){
 
         }
     }

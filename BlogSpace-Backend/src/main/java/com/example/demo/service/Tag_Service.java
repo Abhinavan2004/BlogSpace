@@ -2,16 +2,14 @@ package com.example.demo.service;
 
 import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.repository.Repository_Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.util.Arrays.stream;
 
 @Transactional
 @Service
@@ -56,5 +54,9 @@ public class Tag_Service {
             repository_tag.deleteById(id);
         });
         }
+
+    public Entity_Tags getTagById(UUID tagId) {
+        return repository_tag.findById(tagId).orElseThrow(() -> new EntityNotFoundException("Tag Id Not Found")) ;
     }
+}
 
