@@ -30,8 +30,20 @@ public class Service_Posts {
             );
         }
         if(categoryId != null){
-
+            Entity_Category category = service_category.findCategoryById(categoryId);
+            return repository_post.findAllByStatusAndCategory(
+                    Enum_Post.PUBLISHED,
+                    category
+            );
         }
+        if(tagId != null ){
+            Entity_Tags tag = tagservice.getTagById(tagId);
+            return repository_post.findAllByStatusAndTagsContaining(
+                    Enum_Post.PUBLISHED,
+                    tag
+            );
+        }
+        return repository_post.findAllByStatus(Enum_Post.PUBLISHED);
     }
 
 }
