@@ -1,5 +1,7 @@
 package com.example.demo.domain.mappers;
 
+import com.example.demo.domain.CreatePostRequest;
+import com.example.demo.domain.dtos.Create_Post_Dto;
 import com.example.demo.domain.dtos.Dto_Posts;
 import com.example.demo.domain.entity.Entity_Post;
 import org.mapstruct.Mapper;
@@ -13,4 +15,6 @@ public interface PostMapper {
     @Mapping(target="category" , source = "category")
     @Mapping(target="tags" , source="tags")
     Dto_Posts toDto(Entity_Post post);
+
+    CreatePostRequest tocreatpostrequest(Create_Post_Dto dto);
 }
