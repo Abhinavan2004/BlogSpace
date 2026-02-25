@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.CreatePostRequest;
+import com.example.demo.domain.UpdatePostRequest;
 import com.example.demo.domain.dtos.Create_Post_Dto;
 import com.example.demo.domain.dtos.Dto_Posts;
 import com.example.demo.domain.dtos.Update_Post_Dto;
@@ -59,6 +60,8 @@ public class Controller_Post {
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Dto_Posts> updatePost(@PathVariable UUID id , @Valid @RequestBody Update_Post_Dto updatePostDto){
+        UpdatePostRequest updatePostRequest = postMapper.toupdatepostrequest(updatePostDto);
+
 
     }
 }
