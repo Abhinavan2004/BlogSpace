@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class Update_Post_Dto {
 
     @Builder.Default
     @Size(max =10 , message ="Maximum {max} tags allowed")
-    private Set<UUID> tagIds ;
+    private Set<UUID> tagIds = new HashSet<>(); ;
 
     @NotNull(message = "Status is required")
     private Enum_Post status ;
