@@ -69,6 +69,15 @@ public class Controller_Post {
     @GetMapping(path = "/{id}")
     public ResponseEntity<Dto_Posts> getPost(
             @PathVariable UUID id){
+Entity_Post post = postService.getPost(id);
+Dto_Posts postDto = postMapper.toDto(post);
+return ResponseEntity.ok(postDto);
+    }
+
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deletePost(@PathVariable UUID id){
+
 
     }
 }
