@@ -114,4 +114,8 @@ public class Service_Posts {
         return  repository_post.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post does not exist with id : " + id));
     }
+
+    public void deletePost(UUID id){
+        repository_post.delete(getPost(id));
+    }
 }
