@@ -34,7 +34,7 @@ public class Create_Post_Dto {
     private Set<UUID> tagIds = new HashSet<>();
 
     @NotNull(message = "Status is required")
-    private Enum_Post staus ;
+    private Enum_Post status ;
 
 
 }
