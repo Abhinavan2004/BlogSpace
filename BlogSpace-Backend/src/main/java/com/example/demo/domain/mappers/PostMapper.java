@@ -1,8 +1,10 @@
 package com.example.demo.domain.mappers;
 
 import com.example.demo.domain.CreatePostRequest;
+import com.example.demo.domain.UpdatePostRequest;
 import com.example.demo.domain.dtos.Create_Post_Dto;
 import com.example.demo.domain.dtos.Dto_Posts;
+import com.example.demo.domain.dtos.Update_Post_Dto;
 import com.example.demo.domain.entity.Entity_Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,4 +19,6 @@ public interface PostMapper {
     Dto_Posts toDto(Entity_Post post);
 
     CreatePostRequest tocreatpostrequest(Create_Post_Dto dto);
+    UpdatePostRequest toupdatepostrequest(Update_Post_Dto dto);
+
 }

@@ -3,12 +3,14 @@ package com.example.demo.controller;
 import com.example.demo.domain.CreatePostRequest;
 import com.example.demo.domain.dtos.Create_Post_Dto;
 import com.example.demo.domain.dtos.Dto_Posts;
+import com.example.demo.domain.dtos.Update_Post_Dto;
 import com.example.demo.domain.entity.Entity_Post;
 import com.example.demo.domain.entity.Entity_User;
 import com.example.demo.domain.mappers.PostMapper;
 import com.example.demo.service.Service_Posts;
 import com.example.demo.service.Service_User;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +57,9 @@ public class Controller_Post {
         return new ResponseEntity<>(createdPostDto, HttpStatus.CREATED);
     }
 
-    @PostMapping
-    public ResponseEntity<Dto_Posts>
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Dto_Posts> updatePost(@PathVariable UUID id , @Valid @RequestBody Update_Post_Dto updatePostDto){
+
+    }
 }
 
