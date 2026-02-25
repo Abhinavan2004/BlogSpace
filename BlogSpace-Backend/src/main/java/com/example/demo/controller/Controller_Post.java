@@ -61,7 +61,14 @@ public class Controller_Post {
     @PutMapping(path = "/{id}")
     public ResponseEntity<Dto_Posts> updatePost(@PathVariable UUID id , @Valid @RequestBody Update_Post_Dto updatePostDto){
         UpdatePostRequest updatePostRequest = postMapper.toupdatepostrequest(updatePostDto);
+        Entity_Post updatedPost =  postService.updatePost(id , updatePostRequest);
+        Dto_Posts updatedPostDto = postMapper.toDto(updatedPost);
+        return ResponseEntity.ok(updatedPostDto);
+    }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Dto_Posts> getPost(
+            @PathVariable UUID id){
 
     }
 }

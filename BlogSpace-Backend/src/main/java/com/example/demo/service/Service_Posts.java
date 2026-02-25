@@ -108,6 +108,10 @@ public class Service_Posts {
             existingPost.setTags(new HashSet<>(newTags));
         }
         return repository_post.save(existingPost);
+    }
 
+    public Entity_Post getPost(UUID id){
+        return  repository_post.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Post does not exist with id : " + id));
     }
 }
