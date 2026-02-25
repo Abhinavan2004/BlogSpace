@@ -10,6 +10,7 @@ import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.domain.entity.Entity_User;
 import com.example.demo.repository.Repository_Post;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +85,7 @@ public class Service_Posts {
         return (int) Math.ceil((double) wordCount / WORDS_PER_MINUTE);
     }
 
+    @Transactional
     public Entity_Post updatePost(UUID id , UpdatePostRequest updatePostRequest){
         Entity_Post existingPost = repository_post.findById(id).
                 orElseThrow(() ->  new EntityNotFoundException("Post does not exist with id : " + id));
@@ -101,9 +103,11 @@ public class Service_Posts {
         }
        Set<UUID> existingTagIds = existingPost.getTags().stream().map(Entity_Tags::getId).collect(Collectors.toSet());
         Set<UUID> updatePostRequestTagIds = updatePostRequest.getTagIds();
-        if(!existingTagIds.equals(updatePostRequest.getTagIds()){
-            List<Entity_Tags> newTags = tagservice.getTagById(updatePostRequestTagIds);
+        if(!existingTagIds.equals(updatePostRequestTagIds)){
+            List<Entity_Tags> newTags = tagservice.getTagsByIds(updatePostRequestTagIds);
+            existingPost.setTags(new HashSet<>(newTags));
         }
+        return repository_post.save(existingPost);
 
     }
 }
