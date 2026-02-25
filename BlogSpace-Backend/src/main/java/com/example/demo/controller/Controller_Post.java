@@ -54,5 +54,8 @@ public class Controller_Post {
         Dto_Posts createdPostDto = postMapper.toDto(createdPost);
         return new ResponseEntity<>(createdPostDto, HttpStatus.CREATED);
     }
+
+    @PostMapping
+    public ResponseEntity<Dto_Posts>
 }
 
