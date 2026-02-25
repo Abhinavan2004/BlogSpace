@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Builder
 public class Dto_CreateCategory {
     @NotBlank(message="Category name is required")
-    @Size(min=2 , max=10 , message = "Name should be between {min} to {max} letters")
+    @Size(min=2 , max=50 , message = "Name should be between {min} to {max} letters")
     @Pattern(regexp="^[\\w\\s-]+$" , message="Name should only contain letters , digits , spaces and hypens")
     private String name;
 }
