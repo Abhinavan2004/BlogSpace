@@ -40,5 +40,10 @@ public class Controller_Post {
         List<Dto_Posts> postDtos = draftPosts.stream().map(postMapper::toDto).toList();
         return ResponseEntity.ok(postDtos);
     }
+
+    @PostMapping
+    public ResponseEntity<Dto_Posts> post(@RequestBody Entity_Post post){
+
+    }
 }
 
