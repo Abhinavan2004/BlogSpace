@@ -48,6 +48,7 @@ const HomePage: React.FC = () => {
   }, [page, sortBy, selectedCategory, selectedTag]);
 
   const handleCategoryChange = (categoryId: string|undefined) => {
+    setSelectedTag(undefined);
     if("all" === categoryId){
       setSelectedCategory(undefined)
     } else {
@@ -64,8 +65,9 @@ const HomePage: React.FC = () => {
         <CardBody>
           <div className="flex flex-col gap-4">                     
             <Tabs 
-              selectedKey={selectedCategory} 
+              selectedKey={selectedCategory ?? "all"} 
               onSelectionChange={(key) => {
+                setSelectedTag(undefined);
                 handleCategoryChange(key as string)
               }}
               variant="underlined"
