@@ -4,6 +4,7 @@ import com.example.demo.domain.Enum_Post;
 import com.example.demo.domain.entity.Entity_Category;
 import com.example.demo.domain.entity.Entity_Post;
 import com.example.demo.domain.entity.Entity_Tags;
+import com.example.demo.domain.entity.Entity_User;
 import com.example.demo.repository.Repository_Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,10 @@ public class Service_Posts {
             );
         }
         return repository_post.findAllByStatus(Enum_Post.PUBLISHED);
+    }
+
+    public List<Entity_Post> getDraftsPosts(Entity_User user){
+        return repository_post.findAllByAuthorAndStatus(user ,  Enum_Post.PUBLISHED);
     }
 
 }
