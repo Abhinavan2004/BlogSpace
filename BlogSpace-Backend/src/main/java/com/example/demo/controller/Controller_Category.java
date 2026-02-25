@@ -30,6 +30,13 @@ public class Controller_Category {
         return ResponseEntity.ok(categories);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Dto_Category> updateCategory(
+            @PathVariable UUID id,
+            @Valid @RequestBody Dto_CreateCategory dto_CreateCategory) {
+        Entity_Category updatedCategory = serviceCategory.updateCategory(id, dto_CreateCategory.getName());
+        return ResponseEntity.ok(category_mapper.toDto(updatedCategory));
+    }
 
     @PostMapping
     public ResponseEntity<Dto_Category> createCategory(@Valid @RequestBody Dto_CreateCategory dto_CreateCategory) {
