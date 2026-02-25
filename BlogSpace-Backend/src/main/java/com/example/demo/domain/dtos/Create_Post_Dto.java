@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Create_Post {
+public class Create_Post_Dto {
 
     @NotBlank(message = "Title is required")
     @Size(min = 3 , max = 200 , message="Contente must be between {min} and {max} characters")
