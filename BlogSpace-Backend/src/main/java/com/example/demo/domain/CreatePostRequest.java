@@ -16,7 +16,7 @@ import java.util.UUID;
 public class CreatePostRequest {
     private String title ;
     private String content ;
-    private UUID categoryID ;
+    private UUID categoryId ;
 
     @Builder.Default
     private Set<UUID> tagIds = new HashSet<>();

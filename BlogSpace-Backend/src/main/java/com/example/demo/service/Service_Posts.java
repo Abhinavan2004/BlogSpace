@@ -62,7 +62,7 @@ public class Service_Posts {
         post.setStatus(cpr.getStatus());
         post.setAuthor(user);
         post.setReadingTime(calculateReadingTime((cpr.getContent())));
-        Entity_Category category = service_category.findCategoryById(cpr.getCategoryID());
+        Entity_Category category = service_category.findCategoryById(cpr.getCategoryId());
         post.setCategory(category);
 
         Set<UUID> tagIDs = cpr.getTagIds();
