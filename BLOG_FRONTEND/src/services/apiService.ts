@@ -138,7 +138,10 @@ class ApiService {
     categoryId?: string;
     tagId?: string;
   }): Promise<Post[]> {
-    const response: AxiosResponse<Post[]> = await this.api.get('/posts', { params });
+      const cleanParams = Object.fromEntries(
+    Object.entries(params).filter(([_, v]) => v !== undefined)
+  );
+    const response: AxiosResponse<Post[]> = await this.api.get('/posts', { params: cleanParams });
     return response.data;
   }
 
