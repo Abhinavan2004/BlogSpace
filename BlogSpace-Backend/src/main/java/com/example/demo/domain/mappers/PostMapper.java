@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring" , unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostMapper {
+    @Mapping(target = "author.name", source = "author.username")
     @Mapping(target = "author" , source = "author")
     @Mapping(target="category" , source = "category")
     @Mapping(target="tags" , source="tags")
