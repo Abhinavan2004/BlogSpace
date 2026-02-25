@@ -39,6 +39,19 @@ public class Service_Category {
         }
     }
 
+    @Transactional
+    public Entity_Category updateCategory(UUID id, String newName) {
+        Entity_Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+
+        if (categoryRepository.existsByName(newName)) {
+            throw new IllegalArgumentException("Category already exists with name: " + newName);
+        }
+
+        category.setName(newName);
+        return categoryRepository.save(category);
+    }
+
     public Entity_Category findCategoryById(UUID id) {
         return categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Category Id Not Found")) ;
     }
