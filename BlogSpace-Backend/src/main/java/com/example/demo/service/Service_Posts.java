@@ -52,7 +52,7 @@ public class Service_Posts {
     }
 
     public List<Entity_Post> getDraftsPosts(Entity_User user){
-        return repository_post.findAllByAuthorAndStatus(user ,  Enum_Post.PUBLISHED);
+        return repository_post.findAllByAuthorAndStatus(user ,  Enum_Post.DRAFT);
     }
 
     public Entity_Post createPost(Entity_User user , CreatePostRequest cpr){
