@@ -6,6 +6,7 @@ import com.example.demo.domain.entity.Entity_User;
 import com.example.demo.domain.mappers.PostMapper;
 import com.example.demo.service.Service_Posts;
 import com.example.demo.service.Service_User;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,10 @@ public class Controller_Post {
         return ResponseEntity.ok(postDtos);
     }
 
-    @PostMapping("/drafts")
-    public ResponseEntity<List<Dto_Posts>> getAllDrafts(UUID id){
-        Entity_User loggedIn = serviceuser.getUserById(id);
+    @GetMapping("/drafts")
+    public ResponseEntity<List<Dto_Posts>> getAllDrafts(HttpServletRequest request){
+        UUID userID = (UUID) request.getAttribute("UserId");
+        Entity_User loggedIn = serviceuser.getUserById(userID);
         List<Entity_Post> draftPosts = postService.getDraftsPosts(loggedIn);
         List<Dto_Posts> postDtos = draftPosts.stream().map(postMapper::toDto).toList();
         return ResponseEntity.ok(postDtos);
