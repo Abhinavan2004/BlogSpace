@@ -2,11 +2,14 @@ package com.example.demo.service;
 
 import com.example.demo.domain.CreatePostRequest;
 import com.example.demo.domain.Enum_Post;
+import com.example.demo.domain.UpdatePostRequest;
+import com.example.demo.domain.dtos.Update_Post_Dto;
 import com.example.demo.domain.entity.Entity_Category;
 import com.example.demo.domain.entity.Entity_Post;
 import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.domain.entity.Entity_User;
 import com.example.demo.repository.Repository_Post;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,5 +82,28 @@ public class Service_Posts {
         }
         int wordCount = content.trim().split("\\s+").length;
         return (int) Math.ceil((double) wordCount / WORDS_PER_MINUTE);
+    }
+
+    public Entity_Post updatePost(UUID id , UpdatePostRequest updatePostRequest){
+        Entity_Post existingPost = repository_post.findById(id).
+                orElseThrow(() ->  new EntityNotFoundException("Post does not exist with id : " + id));
+
+        existingPost.setTitle(updatePostRequest.getTitle());
+        String postContent = updatePostRequest.getContent() ;
+        existingPost.setContent(postContent);
+        existingPost.setStatus(updatePostRequest.getStatus());
+        existingPost.setReadingTime(calculateReadingTime(postContent));
+
+        UUID updatePostRequestCategoryId = updatePostRequest.getCategoryId();
+        if(!existingPost.getCategory().getId().equals(updatePostRequestCategoryId)){
+            Entity_Category newcategory = service_category.findCategoryById(updatePostRequestCategoryId);
+            existingPost.setCategory(newcategory);
+        }
+       Set<UUID> existingTagIds = existingPost.getTags().stream().map(Entity_Tags::getId).collect(Collectors.toSet());
+        Set<UUID> updatePostRequestTagIds = updatePostRequest.getTagIds();
+        if(!existingTagIds.equals(updatePostRequest.getTagIds()){
+            List<Entity_Tags> newTags = tagservice.getTagById(updatePostRequestTagIds);
+        }
+
     }
 }
