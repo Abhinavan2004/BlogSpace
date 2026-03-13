@@ -21,13 +21,12 @@ public class Entity_User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
     private String auth0Id;
 
     @Column(nullable = false,unique = true)
     private String email;
 
-    @Column(nullable = true)  //for google users
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
