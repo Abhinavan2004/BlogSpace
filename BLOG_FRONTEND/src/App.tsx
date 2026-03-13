@@ -8,7 +8,10 @@ import CategoriesPage from "./pages/CategoriesPage";
 import TagsPage from "./pages/TagsPage";
 import DraftsPage from "./pages/DraftsPage";
 import LoginPage from "./pages/LoginPage";
+import OAuth2CallbackPage from './pages/OAuth2CallbackPage';
 import { AuthProvider, useAuth } from "./components/AuthContext";
+import EmailLoginPage from './pages/EmailLoginPage';
+
 
 // Protected Route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -46,6 +49,8 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/oauth2/callback" element={<OAuth2CallbackPage />} />
+
           <Route path="/posts/:id" element={<PostPage isAuthenticated={isAuthenticated}/>} />
           <Route 
             path="/posts/:id/edit" 
@@ -55,6 +60,7 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/login/email" element={<EmailLoginPage />} />
           <Route path="/categories" element={<CategoriesPage isAuthenticated={isAuthenticated}/>} />
           <Route path="/tags" element={<TagsPage isAuthenticated={isAuthenticated}/>} />
           <Route 

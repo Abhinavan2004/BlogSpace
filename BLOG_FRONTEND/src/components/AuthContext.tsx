@@ -9,101 +9,74 @@ interface AuthUser {
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  isLoading: boolean;
   user: AuthUser | null;
-  login: (email: string, password: string) => Promise<void>;
+  loginWithEmail: () => void;
+  loginWithGoogle: () => void;
   logout: () => void;
-  token: string | null;
-}
-
-interface AuthProviderProps {
-  children: React.ReactNode;
+  setTokenAndSync: (token: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser]           = useState<AuthUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize auth state from token
+  // On app load, restore session from stored token
   useEffect(() => {
-    const initializeAuth = async () => {
-      const storedToken = localStorage.getItem('token');
-      if (storedToken) {
-        try {
-          // TODO: Add endpoint to fetch user profile
-          // const userProfile = await apiService.getUserProfile();
-          // setUser(userProfile);
-          setIsAuthenticated(true);
-          setToken(storedToken);
-        } catch (error) {
-          // If token is invalid, clear authentication
-          localStorage.removeItem('token');
-          setIsAuthenticated(false);
-          setUser(null);
-          setToken(null);
-        }
-      }
-    };
-
-    initializeAuth();
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      apiService.syncUser(token)
+        .then(dbUser => setUser({ id: dbUser.id, name: dbUser.username, email: dbUser.email }))
+        .catch(() => localStorage.removeItem('auth_token'))
+        .finally(() => setIsLoading(false));
+    } else {
+      setIsLoading(false);
+    }
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const setTokenAndSync = useCallback(async (token: string) => {
+    setIsLoading(true);
     try {
-      const response = await apiService.login({ email, password });
-      
-      localStorage.setItem('token', response.token);
-      setToken(response.token);
-      setIsAuthenticated(true);
-
-      // TODO: Add endpoint to fetch user profile after login
-      // const userProfile = await apiService.getUserProfile();
-      // setUser(userProfile);
-    } catch (error) {
-      throw error;
+      const dbUser = await apiService.syncUser(token);
+      setUser({ id: dbUser.id, name: dbUser.username, email: dbUser.email });
+    } finally {
+      setIsLoading(false);
     }
+  }, []);
+
+  const loginWithGoogle = useCallback(() => {
+    // Directly hit Spring Boot's OAuth2 endpoint
+    window.location.href = 'http://localhost:8083/oauth2/authorization/google';
+  }, []);
+
+  const loginWithEmail = useCallback(() => {
+    window.location.href = '/login/email'; // or open your email form
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
+    localStorage.removeItem('auth_token');
     setUser(null);
-    setToken(null);
-    apiService.logout(); // This clears the token from apiService
   }, []);
 
-  // Update apiService token when it changes
-  useEffect(() => {
-    if (token) {
-      // Update axios instance configuration
-      const axiosInstance = apiService['api'];
-      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    }
-  }, [token]);
-
-  const value = {
-    isAuthenticated,
-    user,
-    login,
-    logout,
-    token
-  };
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{
+      isAuthenticated: !!user,
+      isLoading,
+      user,
+      loginWithEmail,
+      loginWithGoogle,
+      logout,
+      setTokenAndSync,
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  return ctx;
 };
-
-export default AuthContext;

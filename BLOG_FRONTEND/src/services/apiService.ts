@@ -1,5 +1,12 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig, AxiosError } from 'axios';
 
+export interface UserSyncResponse {
+  id: string;
+  email: string;
+  username: string;
+  auth0Id: string;
+}
+
 // Types
 export interface LoginRequest {
   email: string;
@@ -80,24 +87,24 @@ class ApiService {
 
     // Add request interceptor for authentication
     this.api.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error: AxiosError) => {
-        return Promise.reject(error);
-      }
-    );
+  async (config: InternalAxiosRequestConfig) => {
+    // Token is injected per-request from AuthContext.getToken()
+    // For calls that need auth, the token is set externally before calling
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error: AxiosError) => Promise.reject(error)
+);
 
     // Add response interceptor for error handling
     this.api.interceptors.response.use(
       (response: AxiosResponse) => response,
       (error: AxiosError) => {
         if (error.response?.status === 401) {
-          localStorage.removeItem('token');
+          localStorage.removeItem('auth_token');
           window.location.href = '/login';
         }
         return Promise.reject(this.handleError(error));
@@ -112,6 +119,15 @@ class ApiService {
     return ApiService.instance;
   }
 
+ public async syncUser(token: string): Promise<UserSyncResponse> {
+  const response = await this.api.post('/auth/sync', {}, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  localStorage.setItem('auth_token', token);
+  return response.data;
+}
+
+
   private handleError(error: AxiosError): ApiError {
     if (error.response?.data) {
       return error.response.data as ApiError;
@@ -125,13 +141,13 @@ class ApiService {
   // Auth endpoints
   public async login(credentials: LoginRequest): Promise<AuthResponse> {
     const response: AxiosResponse<AuthResponse> = await this.api.post('/auth/login', credentials);
-    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('auth_token', response.data.token);
     return response.data;
   }
 
   public logout(): void {
-    localStorage.removeItem('token');
-  }
+  localStorage.removeItem('auth_token');
+}
 
   // Posts endpoints
   public async getPosts(params: {
