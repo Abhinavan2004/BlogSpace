@@ -11,6 +11,8 @@ import LoginPage from "./pages/LoginPage";
 import OAuth2CallbackPage from './pages/OAuth2CallbackPage';
 import { AuthProvider, useAuth } from "./components/AuthContext";
 import EmailLoginPage from './pages/EmailLoginPage';
+import RegisterPage from "./pages/RegisterPage";
+
 
 
 // Protected Route component
@@ -60,6 +62,8 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/register" element={<RegisterPage />} />
+
           <Route path="/login/email" element={<EmailLoginPage />} />
           <Route path="/categories" element={<CategoriesPage isAuthenticated={isAuthenticated}/>} />
           <Route path="/tags" element={<TagsPage isAuthenticated={isAuthenticated}/>} />

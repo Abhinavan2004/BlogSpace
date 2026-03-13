@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { apiService } from '../services/apiService';
 import { useAuth } from '../components/AuthContext';
 
@@ -49,6 +49,13 @@ const EmailLoginPage = () => {
             Sign In
           </button>
         </div>
+        <p className="text-sm text-center mt-4">
+  Don't have an account? 
+  <Link to="/register" className="text-indigo-600 ml-1">
+    Sign Up
+  </Link>
+</p>
+
 
         <p className="text-center text-sm text-gray-500">
           <a href="/login" className="text-indigo-600 hover:underline">← Back to login options</a>
