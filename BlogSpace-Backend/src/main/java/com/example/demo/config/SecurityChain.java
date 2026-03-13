@@ -4,10 +4,13 @@ import com.example.demo.repository.Repository_User;
 import com.example.demo.security.BlogUserDetailService;
 import com.example.demo.security.BlogUserDetails;
 import com.example.demo.security.JwtAuthenticationFilter;
+import com.example.demo.security.OAuth2SuccessHandler;
 import com.example.demo.service.Service_Auth_Impl;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -53,7 +56,7 @@ public UserDetailsService userDetailsService(Repository_User repository_user){
         return new BlogUserDetailService(repository_user);
 }
     @Bean
-    public SecurityFilterChain securityfilterchain(HttpSecurity http , JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+    public SecurityFilterChain securityfilterchain(HttpSecurity http , OAuth2SuccessHandler oauth2SuccessHandler , JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
                 .cors(cors -> {})   // 🔥 enable CORS
                 .httpBasic(httpBasic -> httpBasic.disable())
@@ -63,12 +66,21 @@ public UserDetailsService userDetailsService(Repository_User repository_user){
                         .requestMatchers(HttpMethod.GET, "/api/v1/posts", "/api/v1/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/posts/drafts").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories", "/api/v1/categories/**").permitAll()
+                        .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll() // 👈 allow OAuth2 URLs
                         .requestMatchers(HttpMethod.GET, "/api/v1/tags", "/api/v1/tags/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth", "/api/v1/auth/login", "/api/v1/auth/sync").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )  .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oauth2SuccessHandler)
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                        })
                 ).addFilterBefore(jwtAuthenticationFilter , UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
