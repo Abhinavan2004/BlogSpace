@@ -32,4 +32,20 @@ public class Controller_Auth {
                 .build();
         return ResponseEntity.ok(resp);
     }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody loginRequest request){
+
+        service_auth.register(
+                request.getEmail(),
+                request.getPassword()
+        );
+
+        return ResponseEntity.ok("User registered successfully");
+    }
+
+
+
+
 }

@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.entity.Entity_User;
+import com.example.demo.repository.Repository_User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -28,6 +30,7 @@ public class Service_Auth_Impl implements Service_Auth{
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    private final Repository_User userRepository;
 
     @Value("${jwt.secret}")
     private String SecretKey ;
@@ -48,6 +51,24 @@ public class Service_Auth_Impl implements Service_Auth{
 
         return userDetails;
     }
+
+
+    public void register(String email, String password) {
+
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("User already exists");
+        }
+
+        Entity_User user = Entity_User.builder()
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .username(email)
+                .build();
+
+        userRepository.save(user);
+    }
+
+
 
     private long jwtExpiryms = 86400000L;
 
