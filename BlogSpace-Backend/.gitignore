@@ -33,4 +33,4 @@ build/
 .vscode/
 
 # Ignore Spring Boot config
-BlogSpace-Backend/src/main/resources/application.properties
+**/application.properties
