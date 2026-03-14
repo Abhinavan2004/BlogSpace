@@ -39,8 +39,8 @@ function AppContent() {
         } : undefined}
         onLogout={logout}
       />
-      <main className="container mx-auto py-6">
-        <Routes>
+<main className="w-full max-w-full overflow-x-hidden px-4 py-6">
+          <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route 
@@ -77,6 +77,7 @@ function AppContent() {
           />
         </Routes>
       </main>
+    
     </BrowserRouter>
   );
 }

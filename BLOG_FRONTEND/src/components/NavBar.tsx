@@ -54,6 +54,58 @@ const NavBar: React.FC<NavBarProps> = ({
     </Link>
   );
 
+  const AuthItems = () =>
+    isAuthenticated ? (
+      <>
+        <Button
+          as={Link}
+          to="/posts/drafts"
+          color="secondary"
+          variant="flat"
+          startContent={<BookDashed size={16} />}
+        >
+          Draft Posts
+        </Button>
+        <Button
+          as={Link}
+          to="/posts/new"
+          color="primary"
+          variant="flat"
+          startContent={<Plus size={16} />}
+        >
+          New Post
+        </Button>
+        <Dropdown placement="bottom-end">
+          <DropdownTrigger>
+            <Avatar
+              isBordered
+              as="button"
+              className="transition-transform"
+              src={userProfile?.avatar}
+              name={userProfile?.name}
+            />
+          </DropdownTrigger>
+          <DropdownMenu aria-label="User menu">
+            <DropdownItem key="drafts" startContent={<Edit3 size={16} />}>
+              <Link to="/posts/drafts">My Drafts</Link>
+            </DropdownItem>
+            <DropdownItem
+              key="logout"
+              startContent={<LogOut size={16} />}
+              className="text-danger"
+              color="danger"
+              onPress={onLogout} >
+              Log Out
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </>
+    ) : (
+      <Button as={Link} to="/login" variant="flat">
+        Log In
+      </Button>
+    );
+
   return (
     <Navbar
       isBordered
@@ -61,6 +113,7 @@ const NavBar: React.FC<NavBarProps> = ({
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="full"
       className="mb-6"
+      style={{ overflow: 'visible' }}
     >
       {/* ── Mobile: hamburger left ── */}
       <NavbarContent className="sm:hidden" justify="start">
@@ -112,24 +165,32 @@ const NavBar: React.FC<NavBarProps> = ({
         )}
       </NavbarContent>
 
-      {/* ════════════════════════════════════════
-          DESKTOP LAYOUT
-          Single NavbarContent spanning full width.
-          Logo is left, nav links are CSS absolute-centered,
-          auth items are pushed to the right via ml-auto.
-          This guarantees the links are always centered
-          relative to the full navbar width — not relative
-          to whatever space is left between logo and auth.
-      ════════════════════════════════════════ */}
-      <NavbarContent className="hidden sm:flex w-full" justify="start">
+      {/* ══════════════════════════════════════════════════
+          DESKTOP LAYOUT — pure flexbox, no absolute positioning
+          
+          Pattern: 3 equal-weight columns via CSS grid on a wrapper.
+          Left col  → Logo (justify-start)
+          Center col → Nav links (justify-center)  ← always truly centered
+          Right col  → Auth items (justify-end)
+      ══════════════════════════════════════════════════ */}
+      <NavbarContent className="hidden sm:grid w-full" style={{ display: 'none' }} />
 
-        {/* Logo — left anchor */}
-        <NavbarBrand className="flex-shrink-0">
+      {/* We bypass NextUI's NavbarContent entirely for desktop
+          and render a raw grid div so we have full layout control */}
+      <div
+        className="hidden sm:grid w-full items-center"
+        style={{
+          gridTemplateColumns: '1fr auto 1fr',
+          height: '100%',
+        }}
+      >
+        {/* LEFT — Logo */}
+        <div className="flex items-center justify-start">
           <Logo />
-        </NavbarBrand>
+        </div>
 
-        {/* Nav links — truly centered via absolute + translate */}
-        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-10">
+        {/* CENTER — Nav links, always centered */}
+        <div className="flex items-center gap-10">
           {menuItems.map((item) => (
             <Link
               key={item.path}
@@ -145,62 +206,11 @@ const NavBar: React.FC<NavBarProps> = ({
           ))}
         </div>
 
-        {/* Auth — pushed to the far right */}
-        <div className="ml-auto flex items-center gap-3 flex-shrink-0">
-          {isAuthenticated ? (
-            <>
-              <Button
-                as={Link}
-                to="/posts/drafts"
-                color="secondary"
-                variant="flat"
-                startContent={<BookDashed size={16} />}
-              >
-                Draft Posts
-              </Button>
-              <Button
-                as={Link}
-                to="/posts/new"
-                color="primary"
-                variant="flat"
-                startContent={<Plus size={16} />}
-              >
-                New Post
-              </Button>
-              <Dropdown placement="bottom-end">
-                <DropdownTrigger>
-                  <Avatar
-                    isBordered
-                    as="button"
-                    className="transition-transform"
-                    src={userProfile?.avatar}
-                    name={userProfile?.name}
-                  />
-                </DropdownTrigger>
-                <DropdownMenu aria-label="User menu">
-                  <DropdownItem key="drafts" startContent={<Edit3 size={16} />}>
-                    <Link to="/posts/drafts">My Drafts</Link>
-                  </DropdownItem>
-                  <DropdownItem
-                    key="logout"
-                    startContent={<LogOut size={16} />}
-                    className="text-danger"
-                    color="danger"
-                    onPress={onLogout}
-                  >
-                    Log Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </>
-          ) : (
-            <Button as={Link} to="/login" variant="flat">
-              Log In
-            </Button>
-          )}
+        {/* RIGHT — Auth items */}
+        <div className="flex items-center justify-end gap-3">
+          <AuthItems />
         </div>
-
-      </NavbarContent>
+      </div>
 
       {/* ── Mobile dropdown menu ── */}
       <NavbarMenu>

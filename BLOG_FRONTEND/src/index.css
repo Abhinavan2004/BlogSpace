@@ -1,0 +1,7 @@
+/* Replace height: 100vh with min-height */
+html, body, #root {
+  min-height: 100%;  /* 👈 instead of height: 100vh */
+  margin: 0;
+  padding: 0;
+}
+

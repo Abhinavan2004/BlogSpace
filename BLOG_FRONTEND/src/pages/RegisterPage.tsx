@@ -25,7 +25,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="flex items-center justify-center">
       <div className="bg-white p-8 shadow rounded w-96">
         <h2 className="text-xl font-bold mb-4">Create Account</h2>
 
