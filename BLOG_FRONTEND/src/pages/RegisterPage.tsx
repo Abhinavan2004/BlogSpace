@@ -23,7 +23,7 @@ const RegisterPage = () => {
         username,
       });
 
-      navigate("/login/email");
+      navigate("/");
     } catch (err: any) {
       console.error(err);
       setError(
