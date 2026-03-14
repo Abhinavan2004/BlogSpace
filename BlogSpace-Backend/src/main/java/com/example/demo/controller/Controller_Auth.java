@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth/login")
+@RequestMapping("/api/v1/auth")
 public class Controller_Auth {
 
     private final Service_Auth service_auth;
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody loginRequest userDetails){
         UserDetails user = service_auth.authenticate(
                 userDetails.getEmail(),
@@ -39,7 +39,8 @@ public class Controller_Auth {
 
         service_auth.register(
                 request.getEmail(),
-                request.getPassword()
+                request.getPassword(),
+                request.getUsername()
         );
 
         return ResponseEntity.ok("User registered successfully");

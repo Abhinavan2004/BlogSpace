@@ -19,8 +19,8 @@ const LoginPage = () => {
   }
 
   return (
-<div className="flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full space-y-6 p-8 bg-white rounded-xl shadow-md">
+<div className="flex-1 flex items-center justify-center bg-gray-50">
+          <div className="max-w-md w-full space-y-6 p-8 bg-white rounded-xl shadow-md">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-gray-900">Welcome to BlogSpace</h2>
           <p className="mt-2 text-sm text-gray-600">Sign in or create an account</p>

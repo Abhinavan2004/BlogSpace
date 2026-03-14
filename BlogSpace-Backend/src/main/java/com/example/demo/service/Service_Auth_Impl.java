@@ -53,7 +53,7 @@ public class Service_Auth_Impl implements Service_Auth{
     }
 
 
-    public void register(String email, String password) {
+    public void register(String email, String password , String username) {
 
         if (userRepository.findByEmail(email).isPresent()) {
             throw new RuntimeException("User already exists");
@@ -62,7 +62,7 @@ public class Service_Auth_Impl implements Service_Auth{
         Entity_User user = Entity_User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))
-                .username(email)
+                .username(username)
                 .build();
 
         userRepository.save(user);
