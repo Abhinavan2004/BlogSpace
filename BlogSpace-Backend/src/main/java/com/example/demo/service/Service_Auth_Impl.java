@@ -63,6 +63,7 @@ public class Service_Auth_Impl implements Service_Auth{
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .username(username)
+                .auth0Id("local_" + email)
                 .build();
 
         userRepository.save(user);
