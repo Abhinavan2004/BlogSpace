@@ -11,7 +11,6 @@ import com.example.demo.domain.mappers.PostMapper;
 import com.example.demo.repository.Repository_User;
 import com.example.demo.service.Service_Posts;
 import com.example.demo.service.Service_User;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +32,7 @@ public class Controller_Post {
     private final Service_User serviceuser;
     private final Repository_User repository_user;
 
-    // Helper to get Entity_User from the JWT principal (works for Google + email login)
+    // Helper to get Entity_User from the JWT principal
     private Entity_User getLoggedInUser(UserDetails userDetails) {
         return repository_user.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Authenticated user not found in DB"));
@@ -69,9 +68,20 @@ public class Controller_Post {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Dto_Posts> updatePost(
+    public ResponseEntity<?> updatePost(
             @PathVariable UUID id,
-            @Valid @RequestBody Update_Post_Dto updatePostDto) {
+            @Valid @RequestBody Update_Post_Dto updatePostDto,
+            @AuthenticationPrincipal UserDetails userDetails) { // 👈 added userDetails
+
+        Entity_User loggedInUser = getLoggedInUser(userDetails);
+        Entity_Post existingPost = postService.getPost(id);
+
+        // ✅ Check ownership — only the author can edit
+        if (!existingPost.getAuthor().getId().equals(loggedInUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("You are not allowed to edit this post");
+        }
+
         UpdatePostRequest updatePostRequest = postMapper.toupdatepostrequest(updatePostDto);
         Entity_Post updatedPost = postService.updatePost(id, updatePostRequest);
         Dto_Posts updatedPostDto = postMapper.toDto(updatedPost);
@@ -86,9 +96,20 @@ public class Controller_Post {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable UUID id) {
+    public ResponseEntity<?> deletePost(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal UserDetails userDetails) { // 👈 added userDetails
+
+        Entity_User loggedInUser = getLoggedInUser(userDetails);
+        Entity_Post existingPost = postService.getPost(id);
+
+        // ✅ Check ownership — only the author can delete
+        if (!existingPost.getAuthor().getId().equals(loggedInUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("You are not allowed to delete this post");
+        }
+
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
-
 }

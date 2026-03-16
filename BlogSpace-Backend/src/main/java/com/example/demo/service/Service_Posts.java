@@ -29,7 +29,7 @@ public class Service_Posts {
     private final Service_Category service_category;
     private final Repository_Post  repository_post;
 
-    public List<Entity_Post> getAllPosts(UUID tagId, UUID categoryId) {
+    public List<Entity_Post> getAllPosts(UUID categoryId, UUID tagId) {
         if (categoryId != null && tagId != null) {
             return service_category.findCategoryByIdOptional(categoryId)
                     .flatMap(category -> tagservice.getTagByIdOptional(tagId)  // 👈 tagservice not service_category
