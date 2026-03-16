@@ -78,12 +78,12 @@ class ApiService {
   private static instance: ApiService;
 
   private constructor() {
-    this.api = axios.create({
-      baseURL: '/api/v1',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+   this.api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '/api/v1',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
     // Add request interceptor for authentication
     this.api.interceptors.request.use(
