@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loginWithGoogle = useCallback(() => {
     // Directly hit Spring Boot's OAuth2 endpoint
-    window.location.href = 'http://localhost:8083/oauth2/authorization/google';
+    window.location.href = 'https://blogspace-production-38a2.up.railway.appgit /oauth2/authorization/google';
   }, []);
 
   const loginWithEmail = useCallback(() => {
