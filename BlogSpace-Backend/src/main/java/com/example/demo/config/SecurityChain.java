@@ -37,7 +37,7 @@ public class SecurityChain {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin("https://blog-space-delta-tan.vercel.app/");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
 
