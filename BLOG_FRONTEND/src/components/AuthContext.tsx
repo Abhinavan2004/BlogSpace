@@ -29,7 +29,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token) {
       apiService.syncUser(token)
         .then(dbUser => setUser({ id: dbUser.id, name: dbUser.username, email: dbUser.email }))
-        .catch(() => localStorage.removeItem('auth_token'))
+        .catch(() =>{console.warn('Sync failed, keeping token')}
+)
         .finally(() => setIsLoading(false));
     } else {
       setIsLoading(false);

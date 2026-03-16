@@ -6,12 +6,16 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8083', // 👈 changed from 8080 to 8083
+        target: 'http://localhost:8083',
         changeOrigin: true,
         secure: false,
         configure: (proxy) => {
-          proxy.on('proxyReq', (proxyReq) => {
-            proxyReq.removeHeader('Authorization'); // 👈 stops browser auth popup
+          proxy.on('proxyReq', (proxyReq, req) => {
+            // Only remove Authorization on register endpoint
+            // to prevent browser native auth popup
+            if (req.url?.includes('/auth/register')) {
+              proxyReq.removeHeader('Authorization');
+            }
           });
         },
       }

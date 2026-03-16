@@ -79,7 +79,7 @@ class ApiService {
 
   private constructor() {
     this.api = axios.create({
-      baseURL: 'http://localhost:8083/api/v1',
+      baseURL: '/api/v1',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -100,16 +100,18 @@ class ApiService {
 );
 
     // Add response interceptor for error handling
-    this.api.interceptors.response.use(
-      (response: AxiosResponse) => response,
-      (error: AxiosError) => {
-        if (error.response?.status === 401) {
-          localStorage.removeItem('auth_token');
-          window.location.href = '/login';
-        }
-        return Promise.reject(this.handleError(error));
-      }
-    );
+ this.api.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  (error: AxiosError) => {
+    // Only redirect if it's an authenticated request that got 401
+    // Don't redirect on public endpoints like getPosts with category filter
+    if (error.response?.status === 401 && localStorage.getItem('auth_token')) {
+      localStorage.removeItem('auth_token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(this.handleError(error));
+  }
+);
   }
 
   public static getInstance(): ApiService {
