@@ -21,11 +21,15 @@ const EmailLoginPage = () => {
   };
 
   return (
-<div className="flex-1 flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full space-y-6 p-8 bg-white rounded-xl shadow-md">
-        <h2 className="text-3xl font-extrabold text-gray-900 text-center">Sign In</h2>
+    <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-transparent">
+      <div className="max-w-md w-full space-y-6 p-8 bg-white dark:bg-zinc-900 rounded-xl shadow-md dark:shadow-zinc-800">
+        <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white text-center">
+          Sign In
+        </h2>
 
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-sm text-center">{error}</p>
+        )}
 
         <div className="space-y-4">
           <input
@@ -33,14 +37,14 @@ const EmailLoginPage = () => {
             placeholder="Email"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <button
             onClick={handleSubmit}
@@ -49,16 +53,18 @@ const EmailLoginPage = () => {
             Sign In
           </button>
         </div>
-        <p className="text-sm text-center mt-4">
-  Don't have an account? 
-  <Link to="/register" className="text-indigo-600 ml-1">
-    Sign Up
-  </Link>
-</p>
 
+        <p className="text-sm text-center mt-4 text-gray-600 dark:text-gray-400">
+          Don't have an account?
+          <Link to="/register" className="text-indigo-600 ml-1 hover:underline">
+            Sign Up
+          </Link>
+        </p>
 
-        <p className="text-center text-sm text-gray-500">
-          <a href="/login" className="text-indigo-600 hover:underline">← Back to login options</a>
+        <p className="text-center text-sm">
+          <a href="/login" className="text-indigo-600 hover:underline">
+            ← Back to login options
+          </a>
         </p>
       </div>
     </div>

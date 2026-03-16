@@ -12,7 +12,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault(); // prevents browser default form submission
+    e.preventDefault();
     setError("");
     setIsLoading(true);
 
@@ -23,7 +23,7 @@ const RegisterPage = () => {
         username,
       });
 
-      navigate("/");
+      navigate("/login/email");
     } catch (err: any) {
       console.error(err);
       setError(
@@ -35,23 +35,24 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center">
-      {/* autocomplete="off" stops browser from triggering its own auth dialog */}
+    <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-transparent">
       <form
         onSubmit={handleRegister}
         autoComplete="off"
-        className="bg-white p-8 shadow rounded w-96"
+        className="bg-white dark:bg-zinc-900 p-8 shadow rounded-xl w-96 dark:shadow-zinc-800"
       >
-        <h2 className="text-xl font-bold mb-4">Create Account</h2>
+        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+          Create Account
+        </h2>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-600">
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-sm text-red-600 dark:text-red-400">
             {error}
           </div>
         )}
 
         <input
-          className="border w-full mb-3 p-2 rounded"
+          className="border border-gray-300 dark:border-zinc-700 w-full mb-3 p-2 rounded bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           placeholder="Username"
           value={username}
           autoComplete="username"
@@ -61,7 +62,7 @@ const RegisterPage = () => {
 
         <input
           type="email"
-          className="border w-full mb-3 p-2 rounded"
+          className="border border-gray-300 dark:border-zinc-700 w-full mb-3 p-2 rounded bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           placeholder="Email"
           value={email}
           autoComplete="email"
@@ -71,7 +72,7 @@ const RegisterPage = () => {
 
         <input
           type="password"
-          className="border w-full mb-3 p-2 rounded"
+          className="border border-gray-300 dark:border-zinc-700 w-full mb-3 p-2 rounded bg-white dark:bg-zinc-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           placeholder="Password"
           value={password}
           autoComplete="new-password"
@@ -87,7 +88,7 @@ const RegisterPage = () => {
           {isLoading ? "Creating account..." : "Create Account"}
         </button>
 
-        <p className="mt-4 text-center text-sm text-gray-500">
+        <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
           Already have an account?{" "}
           <span
             className="text-indigo-600 cursor-pointer hover:underline"
