@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.entity.Entity_Category;
+import com.example.demo.domain.entity.Entity_Tags;
 import com.example.demo.repository.Repository_Category;
+import com.example.demo.repository.Repository_Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class Service_Category {
     private final Repository_Category categoryRepository;
+    private final Repository_Tag tagRepository ;
 
     public List<Entity_Category> listCategories() {
         return categoryRepository.findAllWithPosts();
@@ -50,6 +53,14 @@ public class Service_Category {
 
         category.setName(newName);
         return categoryRepository.save(category);
+    }
+
+    public Optional<Entity_Category> findCategoryByIdOptional(UUID id) {
+        return categoryRepository.findById(id); // return Optional directly
+    }
+
+    public Optional<Entity_Tags> getTagByIdOptional(UUID id) {
+        return tagRepository.findById(id); // return Optional directly
     }
 
     public Entity_Category findCategoryById(UUID id) {

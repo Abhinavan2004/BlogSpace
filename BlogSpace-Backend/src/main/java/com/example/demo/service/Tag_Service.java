@@ -66,5 +66,12 @@ public class Tag_Service {
         }
         return foundTags ;
     }
+
+
+    // Add this method to Tag_Service.java
+    public Optional<Entity_Tags> getTagByIdOptional(UUID id) {
+        return repository_tag.findById(id);
+    }
+
 }
 

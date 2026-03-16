@@ -29,29 +29,25 @@ public class Service_Posts {
     private final Service_Category service_category;
     private final Repository_Post  repository_post;
 
-    public List<Entity_Post> getAllPosts(UUID tagId , UUID categoryId){
-        if(categoryId != null && tagId != null ){
-            Entity_Category category = service_category.findCategoryById(categoryId);
-            Entity_Tags tag = tagservice.getTagById(tagId);
-            return repository_post.findAllByStatusAndCategoryAndTags(
-                    Enum_Post.PUBLISHED,
-                    category,
-                    tag
-            );
+    public List<Entity_Post> getAllPosts(UUID tagId, UUID categoryId) {
+        if (categoryId != null && tagId != null) {
+            return service_category.findCategoryByIdOptional(categoryId)
+                    .flatMap(category -> tagservice.getTagByIdOptional(tagId)  // 👈 tagservice not service_category
+                            .map(tag -> repository_post.findAllByStatusAndCategoryAndTags(
+                                    Enum_Post.PUBLISHED, category, tag)))
+                    .orElse(List.of());
         }
-        if(categoryId != null){
-            Entity_Category category = service_category.findCategoryById(categoryId);
-            return repository_post.findAllByStatusAndCategory(
-                    Enum_Post.PUBLISHED,
-                    category
-            );
+        if (categoryId != null) {
+            return service_category.findCategoryByIdOptional(categoryId)
+                    .map(category -> repository_post.findAllByStatusAndCategory(
+                            Enum_Post.PUBLISHED, category))
+                    .orElse(List.of());
         }
-        if(tagId != null ){
-            Entity_Tags tag = tagservice.getTagById(tagId);
-            return repository_post.findAllByStatusAndTagsContaining(
-                    Enum_Post.PUBLISHED,
-                    tag
-            );
+        if (tagId != null) {
+            return tagservice.getTagByIdOptional(tagId)  // 👈 tagservice
+                    .map(tag -> repository_post.findAllByStatusAndTagsContaining(
+                            Enum_Post.PUBLISHED, tag))
+                    .orElse(List.of());
         }
         return repository_post.findAllByStatus(Enum_Post.PUBLISHED);
     }
