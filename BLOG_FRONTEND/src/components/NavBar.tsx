@@ -15,7 +15,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from '@nextui-org/react';
-import { Plus, Edit3, LogOut, BookDashed } from 'lucide-react';
+import { Plus, Edit3, LogOut, BookDashed, Sun, Moon } from 'lucide-react';
 
 // 👇 UPDATE THIS PATH to your logo image
 import logoImage from '../BLogSpace_Logo.png';
@@ -27,12 +27,16 @@ interface NavBarProps {
     avatar?: string;
   };
   onLogout: () => void;
+  isDark: boolean;
+  onToggleTheme: () => void;
 }
 
 const NavBar: React.FC<NavBarProps> = ({
   isAuthenticated,
   userProfile,
   onLogout,
+  isDark,
+  onToggleTheme,
 }) => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -54,57 +58,77 @@ const NavBar: React.FC<NavBarProps> = ({
     </Link>
   );
 
-  const AuthItems = () =>
-    isAuthenticated ? (
-      <>
-        <Button
-          as={Link}
-          to="/posts/drafts"
-          color="secondary"
-          variant="flat"
-          startContent={<BookDashed size={16} />}
-        >
-          Draft Posts
+  // Theme toggle button — reused in both desktop and mobile
+  const ThemeToggle = () => (
+    <Button
+      isIconOnly
+      variant="light"
+      onPress={onToggleTheme}
+      aria-label="Toggle theme"
+      className="text-default-600 hover:text-default-900"
+    >
+      {isDark ? <Sun size={18} /> : <Moon size={18} />}
+    </Button>
+  );
+
+  const AuthItems = () => (
+    <>
+      {/* Theme toggle */}
+      <ThemeToggle />
+
+      {isAuthenticated ? (
+        <>
+          <Button
+            as={Link}
+            to="/posts/drafts"
+            color="secondary"
+            variant="flat"
+            startContent={<BookDashed size={16} />}
+          >
+            Draft Posts
+          </Button>
+          <Button
+            as={Link}
+            to="/posts/new"
+            color="primary"
+            variant="flat"
+            startContent={<Plus size={16} />}
+          >
+            New Post
+          </Button>
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Avatar
+                isBordered
+                as="button"
+                className="transition-transform"
+                src={userProfile?.avatar}
+                name={userProfile?.name}
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="User menu">
+              <DropdownItem key="drafts" startContent={<Edit3 size={16} />}>
+                <Link to="/posts/drafts">My Drafts</Link>
+              </DropdownItem>
+              <DropdownItem
+                key="logout"
+                startContent={<LogOut size={16} />}
+                className="text-danger"
+                color="danger"
+                onPress={onLogout}
+              >
+                Log Out
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </>
+      ) : (
+        <Button as={Link} to="/login" variant="flat">
+          Log In
         </Button>
-        <Button
-          as={Link}
-          to="/posts/new"
-          color="primary"
-          variant="flat"
-          startContent={<Plus size={16} />}
-        >
-          New Post
-        </Button>
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger>
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              src={userProfile?.avatar}
-              name={userProfile?.name}
-            />
-          </DropdownTrigger>
-          <DropdownMenu aria-label="User menu">
-            <DropdownItem key="drafts" startContent={<Edit3 size={16} />}>
-              <Link to="/posts/drafts">My Drafts</Link>
-            </DropdownItem>
-            <DropdownItem
-              key="logout"
-              startContent={<LogOut size={16} />}
-              className="text-danger"
-              color="danger"
-              onPress={onLogout} >
-              Log Out
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </>
-    ) : (
-      <Button as={Link} to="/login" variant="flat">
-        Log In
-      </Button>
-    );
+      )}
+    </>
+  );
 
   return (
     <Navbar
@@ -127,8 +151,9 @@ const NavBar: React.FC<NavBarProps> = ({
         </NavbarBrand>
       </NavbarContent>
 
-      {/* ── Mobile: auth right ── */}
+      {/* ── Mobile: theme toggle + auth right ── */}
       <NavbarContent className="sm:hidden" justify="end">
+        <ThemeToggle />
         {isAuthenticated ? (
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
@@ -166,17 +191,13 @@ const NavBar: React.FC<NavBarProps> = ({
       </NavbarContent>
 
       {/* ══════════════════════════════════════════════════
-          DESKTOP LAYOUT — pure flexbox, no absolute positioning
-          
-          Pattern: 3 equal-weight columns via CSS grid on a wrapper.
-          Left col  → Logo (justify-start)
-          Center col → Nav links (justify-center)  ← always truly centered
-          Right col  → Auth items (justify-end)
+          DESKTOP LAYOUT — CSS grid for perfect 3-column layout
+          Left  → Logo
+          Center → Nav links (always truly centered)
+          Right  → Theme toggle + Auth items
       ══════════════════════════════════════════════════ */}
       <NavbarContent className="hidden sm:grid w-full" style={{ display: 'none' }} />
 
-      {/* We bypass NextUI's NavbarContent entirely for desktop
-          and render a raw grid div so we have full layout control */}
       <div
         className="hidden sm:grid w-full items-center"
         style={{
@@ -189,7 +210,7 @@ const NavBar: React.FC<NavBarProps> = ({
           <Logo />
         </div>
 
-        {/* CENTER — Nav links, always centered */}
+        {/* CENTER — Nav links */}
         <div className="flex items-center gap-10">
           {menuItems.map((item) => (
             <Link
@@ -206,7 +227,7 @@ const NavBar: React.FC<NavBarProps> = ({
           ))}
         </div>
 
-        {/* RIGHT — Auth items */}
+        {/* RIGHT — Theme toggle + Auth items */}
         <div className="flex items-center justify-end gap-3">
           <AuthItems />
         </div>

@@ -11,7 +11,7 @@ import {
   Divider,
   Avatar,
 } from '@nextui-org/react';
-import { 
+import {
   Calendar,
   Clock,
   Tag,
@@ -24,10 +24,10 @@ import { apiService, Post } from '../services/apiService';
 
 interface PostPageProps {
   isAuthenticated?: boolean;
-  currentUserId?: string;
+  currentUserId?: string; // logged-in user's ID
 }
 
-const PostPage: React.FC<PostPageProps> = ({ 
+const PostPage: React.FC<PostPageProps> = ({
   isAuthenticated,
   currentUserId
 }) => {
@@ -56,6 +56,9 @@ const PostPage: React.FC<PostPageProps> = ({
     fetchPost();
   }, [id]);
 
+  // ✅ Only show edit/delete if logged in AND the post belongs to the current user
+  const isOwner = isAuthenticated && currentUserId && post?.author?.id === currentUserId;
+
   const handleDelete = async () => {
     if (!post || !window.confirm('Are you sure you want to delete this post?')) {
       return;
@@ -79,7 +82,6 @@ const PostPage: React.FC<PostPageProps> = ({
         url: window.location.href,
       });
     } catch (err) {
-      // Fallback to copying URL
       navigator.clipboard.writeText(window.location.href);
     }
   };
@@ -155,7 +157,8 @@ const PostPage: React.FC<PostPageProps> = ({
               Back to Posts
             </Button>
             <div className="flex gap-2">
-              {isAuthenticated && (
+              {/* ✅ Only show Edit/Delete if current user owns this post */}
+              {isOwner && (
                 <>
                   <Button
                     as={Link}
@@ -192,10 +195,7 @@ const PostPage: React.FC<PostPageProps> = ({
           <h1 className="text-3xl font-bold">{post.title}</h1>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <Avatar
-                name={post.author?.name}
-                size="sm"
-              />
+              <Avatar name={post.author?.name} size="sm" />
               <span className="text-default-600">{post.author?.name}</span>
             </div>
             <div className="flex items-center gap-2 text-default-500">
@@ -212,7 +212,7 @@ const PostPage: React.FC<PostPageProps> = ({
         <Divider />
 
         <CardBody>
-          <div 
+          <div
             className="prose max-w-none"
             dangerouslySetInnerHTML={createSanitizedHTML(post.content)}
           />
