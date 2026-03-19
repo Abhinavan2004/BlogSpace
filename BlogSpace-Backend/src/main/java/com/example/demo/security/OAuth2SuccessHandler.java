@@ -6,6 +6,7 @@ import com.example.demo.service.Service_Auth_Impl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +25,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final Service_Auth_Impl service_auth;
     private final UserDetailsService userDetailsService;
 
+    // 👇 Read from environment variable, fallback to localhost for local dev
+    @Value("${FRONTEND_URL:http://localhost:5173}")
+    private String frontendUrl;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -31,27 +36,27 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
 
-        String email = oauth2User.getAttribute("email");
-        String name  = oauth2User.getAttribute("name");
-        String googleId = oauth2User.getAttribute("sub"); // Google's unique user ID
+        String email    = oauth2User.getAttribute("email");
+        String name     = oauth2User.getAttribute("name");
+        String googleId = oauth2User.getAttribute("sub");
 
-        // Find or create user in your DB
+        // Find or create user in DB
         Entity_User user = repository_user.findByEmail(email)
                 .orElseGet(() -> {
                     Entity_User newUser = Entity_User.builder()
                             .email(email)
                             .username(name)
-                            .auth0Id(googleId)          // reusing auth0Id field for Google sub
-                            .password(UUID.randomUUID().toString()) // dummy password, never used
+                            .auth0Id(googleId)
+                            .password(UUID.randomUUID().toString())
                             .build();
                     return repository_user.save(newUser);
                 });
 
-        // Generate your JWT the same way as email/password login
+        // Generate JWT
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         String token = service_auth.generateToken(userDetails);
 
-        // Redirect to frontend with token in URL
-        response.sendRedirect("http://localhost:5173/oauth2/callback?token=" + token);
+        // 👇 Redirect to frontend using environment variable
+        response.sendRedirect(frontendUrl + "/oauth2/callback?token=" + token);
     }
 }
