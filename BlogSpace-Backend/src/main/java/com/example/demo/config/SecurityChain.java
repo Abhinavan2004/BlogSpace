@@ -37,6 +37,8 @@ public class SecurityChain {
         configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedOrigin("http://localhost:5174");
         configuration.addAllowedOrigin("https://blog-space-delta-tan.vercel.app");
+        configuration.addAllowedOrigin("https://abhinava.online");
+        configuration.addAllowedOrigin("https://www.abhinava.online");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
 
