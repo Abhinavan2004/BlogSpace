@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const loginWithGoogle = useCallback(() => {
-    window.location.href = 'https://blogspace-production-c0a6.up.railway.app/oauth2/authorization/google';
+    window.location.href = 'https://api.abhinava.online/oauth2/authorization/google';
   }, []);
 
   const loginWithEmail = useCallback(() => {
