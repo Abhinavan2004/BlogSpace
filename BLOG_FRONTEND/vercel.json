@@ -1,11 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "destination": "https://www.abhinava.online/$1",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "https://api.abhinava.online/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
